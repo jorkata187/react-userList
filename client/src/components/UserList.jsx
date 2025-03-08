@@ -6,11 +6,13 @@ import Pagination from "./Pagination";
 import Search from "./Search";
 import UserListItem from "./UserListItem";
 import UserCreate from "./UserCreate";
+import UserInfo from "./UserInfo";
 
 export default function UserList() {
 
     const [users, setUsers] = useState([]);
     const [showCreate, setShowCreate] = useState(false);
+    const [userIdInfo, setUserIdInfo] =  useState(); // Undefind
 
     useEffect(() => {
         userService.getAll()
@@ -40,6 +42,10 @@ export default function UserList() {
         setShowCreate(false);
     };
 
+    const UserInfoClickHandler = (userId) => {
+        setUserIdInfo(userId);
+    }
+
     return (
         <section className="card users-container">
             <Search />
@@ -50,6 +56,13 @@ export default function UserList() {
                     onSave={saveCreateUserClickHandler}
                 />)
             }
+
+            {userIdInfo && (
+                <UserInfo 
+                    userId={userIdInfo}
+                />)
+                }
+            
 
             <div className="table-wrapper">
 
@@ -163,6 +176,7 @@ export default function UserList() {
                     <tbody>
                         {users.map(user => <UserListItem
                             key={user._id}
+                            onInfoClick={UserInfoClickHandler}
                             {...user}
                         />)}
                     </tbody>
